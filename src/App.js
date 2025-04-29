@@ -35,7 +35,7 @@ function App() {
 
       <ul>
         {news
-          .filter(article => article.title && article.url)
+          .filter(article => article.title && article.url && article.description)
           .map((article, index)=> (
             <li key={index}>
               <NewsArticle article={article} />
