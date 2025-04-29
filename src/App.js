@@ -1,23 +1,47 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
+import NewsArticle from './NewsArticle';
 
 function App() {
-  return (
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try{
+        setLoading(true);
+
+        const response = await axios.get('/api/news');
+
+        setNews(response.data.articles);
+        setLoading(false);
+        
+      } catch (err) {
+        setError('Failed to fetch news articles');
+        setLoading(false);
+      }
+  };
+
+  fetchNews();
+  }, []);
+
+  return(
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Top News</h1>
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+
+      <ul>
+        {news
+          .filter(article => article.title && article.url)
+          .map((article, index)=> (
+            <li key={index}>
+              <NewsArticle article={article} />
+            </li>
+        ))}
+      </ul>
     </div>
   );
 }
