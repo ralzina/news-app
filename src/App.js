@@ -13,7 +13,12 @@ function App() {
       try{
         setLoading(true);
 
-        const response = await axios.get('/api/news');
+        const response = await axios.get('https://newsapi.org/v2/top-headlines', {
+          params: {
+              country: 'us',
+              apiKey: process.env.REACT_APP_NEWS_API_KEY,
+          }
+      });
 
         setNews(response.data.articles);
         setLoading(false);
